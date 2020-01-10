@@ -52,7 +52,7 @@ module.exports = [
 补充：
 
 - `mock.config.js` 文件名必须一致，且必须在**项目根目录下**
-- `tpl` 请参照 mock 的 `template` 格式
+- `tpl` 请参照 [mockjs](http://mockjs.com/) 的 `template` 格式
 - `handle` 的优先级高于 `tpl`，配置了 `handle` 就会忽略 `tpl`
 
 **_2_** 在 vue 中使用，修改 `vue.config.js` 配置文件：

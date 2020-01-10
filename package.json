@@ -1,6 +1,6 @@
 {
   "name": "@andremao/mockjs-config",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,12 @@
     "mockjs",
     "mockjs-config"
   ],
-  "author": "",
+  "homepage": "https://gitee.com/andremao/mockjs-config",
+  "author": "AndreMao",
+  "repository": {
+    "type": "git",
+    "url": "git@gitee.com:andremao/mockjs-config.git"
+  },
   "license": "MIT",
   "dependencies": {
     "mockjs": "^1.1.0"
