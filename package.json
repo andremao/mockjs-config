@@ -1,6 +1,6 @@
 {
   "name": "@andremao/mockjs-config",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
     "mockjs-config"
   ],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "mockjs": "^1.1.0"
   }
