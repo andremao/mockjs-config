@@ -13,40 +13,49 @@
 ```javascript
 const Mock = require('mockjs')
 
-module.exports = [
-  {
-    type: 'post',
-    url: '/user',
-    tpl: {
-      data: { id: '@id()', name: '@cname()', email: '@email()' },
-      status: 200
+module.exports = {
+  // Mock.setup 配置项
+  settings: { timeout: '10-100' },
+  // 要被 mockjs 拦截的请求集
+  requests: [
+    {
+      type: 'POST',
+      url: '/user',
+      // 数据模板，请参照 mockjs
+      tpl: {
+        data: { id: '@ID()', name: '@CNAME()', email: '@EMAIL()' },
+        status: 200
+      }
+      // 自定义响应数据，需要自己手动调用 res 响应对象的 api 返回响应数据
+      // handle(req, res) {
+      //   console.log(req.body, '==== post /user ====')
+      //   const data = Mock.mock({
+      //     data: { id: '@ID()', name: '@CNAME()', email: '@EMAIL()' },
+      //     code: 200
+      //   })
+      //   res.json(data)
+      // }
+    },
+    {
+      type: 'GET',
+      url: '/user/list',
+      // 数据模板，请参照 mockjs
+      // tpl: {
+      //   'data|1-10': [{ id: '@ID()', name: '@CNAME()', email: '@EMAIL()' }],
+      //   status: 200
+      // }
+      // 自定义响应数据，需要自己手动调用 res 响应对象的 api 返回响应数据
+      handle(req, res) {
+        console.log(req.query, '==== get /user/list ====')
+        const data = Mock.mock({
+          'data|1-10': [{ id: '@ID()', name: '@CNAME()', email: '@EMAIL()' }],
+          code: 200
+        })
+        res.json(data)
+      }
     }
-    // handle(req, res) {
-    //   console.log(req.body, '==== post /user ====')
-    //   const data = Mock.mock({
-    //     data: { id: '@id()', name: '@cname()', email: '@email()' },
-    //     code: 200
-    //   })
-    //   res.json(data)
-    // }
-  },
-  {
-    type: 'get',
-    url: '/user/list',
-    // tpl: {
-    //   'data|1-10': [{ id: '@id()', name: '@cname()', email: '@email()' }],
-    //   status: 200
-    // }
-    handle(req, res) {
-      console.log(req.query, '==== get /user/list ====')
-      const data = Mock.mock({
-        'data|1-10': [{ id: '@id()', name: '@cname()', email: '@email()' }],
-        code: 200
-      })
-      res.json(data)
-    }
-  }
-]
+  ]
+}
 ```
 
 补充：

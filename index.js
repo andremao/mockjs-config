@@ -20,7 +20,9 @@ module.exports = (req, res, next) => {
     lastTime = now
   }
 
-  const existed = config.some(v => {
+  Mock.setup(config.settings)
+
+  const existed = config.requests.some(v => {
     if (
       v.type.toUpperCase() === req.method.toUpperCase() &&
       v.url === req.path
