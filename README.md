@@ -14,8 +14,6 @@
 const Mock = require('mockjs')
 
 module.exports = {
-  // Mock.setup 配置项
-  settings: { timeout: '10-100' },
   // 要被 mockjs 拦截的请求集
   requests: [
     {
@@ -24,9 +22,9 @@ module.exports = {
       // 数据模板，请参照 mockjs
       tpl: {
         data: { id: '@ID()', name: '@CNAME()', email: '@EMAIL()' },
-        status: 200
+        status: 2000
       }
-      // 自定义响应数据，需要自己手动调用 res 响应对象的 api 返回响应数据
+      // 自定义响应数据函数，优先级高于 tpl，需要自己手动调用 res 响应对象的 api 返回响应数据
       // handle(req, res) {
       //   console.log(req.body, '==== post /user ====')
       //   const data = Mock.mock({
@@ -44,7 +42,7 @@ module.exports = {
       //   'data|1-10': [{ id: '@ID()', name: '@CNAME()', email: '@EMAIL()' }],
       //   status: 200
       // }
-      // 自定义响应数据，需要自己手动调用 res 响应对象的 api 返回响应数据
+      // 自定义响应数据函数，优先级高于 tpl，需要自己手动调用 res 响应对象的 api 返回响应数据
       handle(req, res) {
         console.log(req.query, '==== get /user/list ====')
         const data = Mock.mock({
@@ -54,7 +52,9 @@ module.exports = {
         res.json(data)
       }
     }
-  ]
+  ],
+  // 参考 Mock.setup 配置项，目前仅支持 timeout，默认值：'10-100'
+  settings: { timeout: '10-100' }
 }
 ```
 

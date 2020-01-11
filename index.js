@@ -17,21 +17,26 @@ module.exports = (req, res, next) => {
     delete require.cache[require.resolve(configFilePath)]
     config = require(configFilePath)
     // console.log(config, '===mock.config.js===')
+    // Mock.setup(config.settings) // mockjs 的 Mock.setup 方法目前仅支持浏览器端拦截
     lastTime = now
   }
 
-  Mock.setup(config.settings)
+  const { requests, settings = { timeout: '10-100' } } = config
+  const { timeout = '10-100' } = settings
 
-  const existed = config.requests.some(v => {
+  const existed = requests.some(v => {
     if (
       v.type.toUpperCase() === req.method.toUpperCase() &&
       v.url === req.path
     ) {
-      if (v.handle) {
-        v.handle(req, res)
-      } else {
-        res.json(Mock.mock(v.tpl))
-      }
+      const finalTimeout = Mock.mock({ [`timeout|${timeout}`]: 0 }).timeout
+      setTimeout(() => {
+        if (v.handle) {
+          v.handle(req, res)
+        } else {
+          res.json(Mock.mock(v.tpl))
+        }
+      }, finalTimeout)
       return true
     }
   })
