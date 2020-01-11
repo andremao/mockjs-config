@@ -17,37 +17,42 @@ module.exports = {
   // 要被 mockjs 拦截的请求集
   requests: [
     {
-      type: 'POST',
-      url: '/user',
+      type: 'GET',
+      url: '/user/list',
       // 数据模板，请参照 mockjs
       tpl: {
-        data: { id: '@ID()', name: '@CNAME()', email: '@EMAIL()' },
-        status: 2000
+        code: 200,
+        message: '获取用户列表成功',
+        'data|1-10': [{ id: '@ID()', name: '@CNAME()', email: '@EMAIL()' }]
       }
       // 自定义响应数据函数，优先级高于 tpl，需要自己手动调用 res 响应对象的 api 返回响应数据
       // handle(req, res) {
-      //   console.log(req.body, '==== post /user ====')
+      //   console.log(req.query, '==== GET /user/list ====')
       //   const data = Mock.mock({
-      //     data: { id: '@ID()', name: '@CNAME()', email: '@EMAIL()' },
-      //     code: 200
+      //     code: 200,
+      //     message: '获取用户列表成功',
+      //     'data|1-10': [{ id: '@ID()', name: '@CNAME()', email: '@EMAIL()' }]
       //   })
       //   res.json(data)
       // }
     },
     {
       type: 'GET',
-      url: '/user/list',
+      url: /^\/user\/\d+$/, // 支持正则表达式
       // 数据模板，请参照 mockjs
       // tpl: {
-      //   'data|1-10': [{ id: '@ID()', name: '@CNAME()', email: '@EMAIL()' }],
-      //   status: 200
+      //   code: 200,
+      //   message: '获取用户信息成功',
+      //   data: { id: '@ID()', name: '@CNAME()', email: '@EMAIL()' }
       // }
       // 自定义响应数据函数，优先级高于 tpl，需要自己手动调用 res 响应对象的 api 返回响应数据
       handle(req, res) {
-        console.log(req.query, '==== get /user/list ====')
+        console.log(req.query, '==== GET /user/:id ====')
+        console.log(req.path) // 若想要获取 地址中的 :id 参数，请自己手动解析
         const data = Mock.mock({
-          'data|1-10': [{ id: '@ID()', name: '@CNAME()', email: '@EMAIL()' }],
-          code: 200
+          code: 200,
+          message: '获取用户信息成功',
+          data: { id: '@ID()', name: '@CNAME()', email: '@EMAIL()' }
         })
         res.json(data)
       }
