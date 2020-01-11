@@ -1,11 +1,18 @@
 const Mock = require('mockjs')
 const path = require('path')
+const fs = require('fs')
 
 const projRootPath = process.cwd()
 // console.log(projRootPath, 'projRootPath')
 
 const configFilePath = path.join(projRootPath, 'mock.config.js')
 // console.log(configFilePath, 'configFilePath')
+
+if (!fs.existsSync(configFilePath)) {
+  console.log('\r\n', new Error(`Cannot find file "${configFilePath}"`))
+  module.exports = (req, res, next) => next()
+  return
+}
 
 let config = require(configFilePath)
 let lastTime = Date.now()
@@ -24,17 +31,19 @@ module.exports = (req, res, next) => {
   const { requests, settings = { timeout: '10-100' } } = config
   const { timeout = '10-100' } = settings
 
-  const existed = requests.some(v => {
-    if (
-      v.type.toUpperCase() === req.method.toUpperCase() &&
-      v.url === req.path
-    ) {
+  if (!requests) {
+    console.log('\r\n', new Error(`Miss option "requests" of mock.config.js`))
+    return next()
+  }
+
+  const existed = requests.some(({ type = 'GET', url, tpl, handle }) => {
+    if (type.toUpperCase() === req.method.toUpperCase() && url === req.path) {
       const finalTimeout = Mock.mock({ [`timeout|${timeout}`]: 0 }).timeout
       setTimeout(() => {
-        if (v.handle) {
-          v.handle(req, res)
+        if (handle) {
+          handle(req, res)
         } else {
-          res.json(Mock.mock(v.tpl))
+          res.json(Mock.mock(tpl))
         }
       }, finalTimeout)
       return true
