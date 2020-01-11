@@ -18,6 +18,7 @@ let config = require(configFilePath)
 let lastTime = Date.now()
 
 module.exports = (req, res, next) => {
+  const { path, method } = req
   const now = Date.now()
   // console.log('now - lastTime:', now - lastTime)
   if (now - lastTime > 3000) {
@@ -37,17 +38,20 @@ module.exports = (req, res, next) => {
   }
 
   const existed = requests.some(({ type = 'GET', url, tpl, handle }) => {
-    if (type.toUpperCase() === req.method.toUpperCase() && url === req.path) {
-      const finalTimeout = Mock.mock({ [`timeout|${timeout}`]: 0 }).timeout
-      setTimeout(() => {
-        if (handle) {
-          handle(req, res)
-        } else {
-          res.json(Mock.mock(tpl))
-        }
-      }, finalTimeout)
-      return true
-    }
+    if (type.toUpperCase() !== method.toUpperCase()) return false
+    if (url instanceof RegExp && !url.test(path)) return false
+    if (!(url instanceof RegExp) && url !== path) return false
+
+    const finalTimeout = Mock.mock({ [`timeout|${timeout}`]: 0 }).timeout
+    setTimeout(() => {
+      if (handle) {
+        handle(req, res)
+      } else {
+        res.json(Mock.mock(tpl))
+      }
+    }, finalTimeout)
+
+    return true
   })
 
   if (!existed) next()
