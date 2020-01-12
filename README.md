@@ -1,6 +1,6 @@
 ### 介绍
 
-这是一个可以用配置文件，并支持热加载，来管理 `mockjs` 的中间件模块
+这是一个支持热加载配置文件结合 `webpack devServer` 来管理 `mockjs` 的中间件模块
 
 ### 安装
 
@@ -75,8 +75,10 @@ module.exports = {
 module.exports = {
   devServer: {
     before(app) {
+      // 判断是否为开发环境
       if (process.env.NODE_ENV.toUpperCase() === 'DEVELOPMENT') {
-        app.use(require('body-parser').json()) // 把 post 请求参数解析为 json 格式
+        // 如果需要获取到 post 请求参数，把下面这行代码的注释解开
+        // app.use(require('body-parser').json()) // 把 post 请求参数解析为 json 格式
         app.use(require('@andremao/mockjs-config')) // 挂上中间件
       }
     }
