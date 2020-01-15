@@ -29,12 +29,14 @@ module.exports = (req, res, next) => {
     lastTime = now
   }
 
-  const { requests, settings = { timeout: '10-100' } } = config
+  const { requests = [], settings = { timeout: '10-100' }, subfiles } = config
   const { timeout = '10-100' } = settings
 
-  if (!requests) {
-    console.log('\r\n', new Error(`Miss option "requests" of mock.config.js`))
-    return next()
+  if (subfiles) {
+    subfiles.forEach(v => {
+      delete require.cache[require.resolve(v)]
+      requests.push(...require(v).requests)
+    })
   }
 
   const existed = requests.some(({ type = 'GET', url, tpl, handle }) => {

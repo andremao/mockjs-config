@@ -12,8 +12,14 @@
 
 ```javascript
 const Mock = require('mockjs')
+const path = require('path')
 
 module.exports = {
+  // 多人开发时，分子文件，子文件内容格式参考下面补充
+  subfiles: [
+    path.join(__dirname, './some/path/to/subfile1.js'),
+    path.join(__dirname, './some/path/to/subfile2.js')
+  ],
   // 要被 mockjs 拦截的请求集
   requests: [
     {
@@ -68,6 +74,20 @@ module.exports = {
 - `mock.config.js` 文件名必须一致，且必须在**项目根目录下**
 - `tpl` 请参照 [mockjs](http://mockjs.com/) 的 `template` 格式
 - `handle` 的优先级高于 `tpl`，配置了 `handle` 就会忽略 `tpl`
+- `./some/path/to/subfile1.js`、`./some/path/to/subfile2.js` 子文件内容如下：
+
+  ```javascript
+  module.exports = {
+    requests: [
+      {
+        type: 'get',
+        url: '/user/list',
+        tpl: { ... }
+      },
+      ...
+    ]
+  }
+  ```
 
 **_2_** 在 vue 中使用，修改 `vue.config.js` 配置文件：
 
