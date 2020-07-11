@@ -1,10 +1,11 @@
 {
   "name": "@andremao/mockjs-config",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.min.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx gulp"
   },
   "keywords": [
     "andremao",
@@ -21,5 +22,14 @@
   "license": "MIT",
   "dependencies": {
     "mockjs": "^1.1.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-cli": "^2.3.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-uglify": "^3.0.2"
   }
 }
