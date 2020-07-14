@@ -23,7 +23,7 @@ module.exports = {
   // 要被 mockjs 拦截的请求集
   requests: [
     {
-      type: 'GET',
+      type: 'GET', // 支持大小写
       // 注意：
       //   mockjs 只能拦截本地主机地址（如：http://localhost:8080/user/list）
       //   mockjs 不能拦截跨域的线上地址（如：http://api.itcast.cn/user/list）
@@ -44,6 +44,14 @@ module.exports = {
       //   })
       //   res.json(data)
       // }
+    },
+    {
+      type: 'get',
+      url: '/user/:id', // 支持动态路由参数
+      tpl: {
+        name: '@CNAME()',
+        'age|18-60': 1,
+      },
     },
     {
       type: 'GET',
