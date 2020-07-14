@@ -40,9 +40,25 @@ module.exports = (req, res, next) => {
 
   const existed = requests.some(({ type = 'GET', url, tpl, handle }) => {
     if (type.toUpperCase() !== method.toUpperCase()) return false;
-    if (url instanceof RegExp && !url.test(path)) return false;
-    if (!(url instanceof RegExp) && new URLPattern(url).match(path) === null)
-      return false;
+
+    if (url instanceof RegExp) {
+      if (!url.test(path)) return false;
+    } else {
+      const params = new URLPattern(url).match(path);
+      if (!params) {
+        return false;
+      }
+
+      if (req.params) {
+        Object.assign(req.params, params);
+      } else {
+        req.params = params;
+      }
+    }
+
+    // if (url instanceof RegExp && !url.test(path)) return false;
+    // if (!(url instanceof RegExp) && new URLPattern(url).match(path) === null)
+    //   return false;
     // if (!(url instanceof RegExp) && url !== path) return false;
 
     const finalTimeout = Mock.mock({ [`timeout|${timeout}`]: 0 }).timeout;
